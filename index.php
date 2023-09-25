@@ -11,6 +11,7 @@ if (isset($_POST['send'])) {
     $password = $_POST['password'];
     $error = null;
     $errornom = null;
+    $salaire = $_POST['salaire'];
     if (empty($nom)) {
         $error =  '<li>Veuillez remplir le champs nom</li>';
         $errornom =  'Veuillez remplir le champs nom';
@@ -36,20 +37,27 @@ if (isset($_POST['send'])) {
         $error .= '<li>Veuillez remplir le champs email</li>';
     } elseif (!preg_match(" /^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/ ", $email)) {
         $error .= "<li>l'email n'est pas valide</li>";
-    }elseif(filter_var($email,FILTER_VALIDATE_EMAIL) === false){
+    } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
         $error .= "<li>l'email n'est pas valide</li>";
     }
 
-    if (!preg_match(" /^(\d\d){4}(\d\d)$/ ", $_POST['num'])) {
-        $error .= "<li>le numero de telephone n'est pas valide</li> ";
-    }
+    // if (!preg_match(" /^(\d\d){4}(\d\d)$/ ", $_POST['genre'])) {
+    //     $error .= "<li>le numero de telephone n'est pas valide</li> ";
+    // }
     //password
     if (empty($password)) {
         $error .= '<li>Veuillez remplir le champs mot de passe</li>';
     }
 
-    if(!valideDate(convertirstrtotime($_POST['birthd']))){
+    if (!valideDate(convertirstrtotime($_POST['jobdate']))) {
         $error .= "<li>la date n'est pas valide</li>";
+    }
+
+    if(empty($salaire)){
+
+        $error .= "<li>Veuillez remplir le champs salaire</li>";
+    }elseif(is_numeric($salaire) === false){
+       $error .= "<li>le salaire doit etre un chiffre</li>"; 
     }
     // var_dump($nom, $prenom);
     // ajouter un select selection dans le formulaire avec les options  informatique  maths et physique  
@@ -64,7 +72,7 @@ if (isset($_POST['send'])) {
 
 
 
-// utiliser bootswatch
+    // utiliser bootswatch
     // creer un dossier entreprise (index header(navbar)  footer) index=> formulaire d'inscription ( les champs de la table employes )
     // ajouter 2 champs email et password (obligatoire)
     //email valide
@@ -132,25 +140,54 @@ if (isset($_POST['send'])) {
             </div>
 
 
+            <fieldset class="form-group">
+                <legend class="mt-4">Genre:</legend>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="genre" id="optionsRadios1" value="option1" checked="">
+                    <label class="form-check-label" for="optionsRadios1">
+                        Homme
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="genre" id="optionsRadios2" value="option2">
+                    <label class="form-check-label" for="optionsRadios2">
+                        Femme
+                    </label>
+                </div>
+
+            </fieldset>
+
             <div class="form-group">
-                <label for="exampleInputPassword1" class="form-label mt-4">date de niassance : </label>
-                <input type="date" class="form-control" placeholder="date de naissance" autocomplete="off" name="birthd">
+                <label for="exampleInputPassword1" class="form-label mt-4">date de d'embauche : </label>
+                <input type="text" class="form-control" placeholder="date d'embauche" autocomplete="off" name="jobdate">
             </div>
 
-
+            <!--
             <div class="form-group">
                 <label for="exampleInputPassword1" class="form-label mt-4">Mobile: </label>
                 <input type="tel" class="form-control" placeholder="mobile" autocomplete="off" name="num">
-            </div>
+            </div> -->
             <div class="form-group">
-                <label for="exampleSelect1" class="form-label mt-4">selection : </label>
+                <label for="exampleSelect1" class="form-label mt-4">service : </label>
                 <select class="form-select" name="selection">
-                    <option value="informatique">informatique</option>
-                    <option value="maths">maths</option>
-                    <option value="physique">physique</option>
+                    <option>commercial</option>
+                    <option>informatique</option>
+                    <option>production</option>
+                    <option>direction</option>
+                    <option>secretariat</option>
+                    <option>juridique</option>
+                    <option>comptabilite</option>
 
                 </select>
             </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="form-label mt-4">salaire :</label>
+                <input type="number" class="form-control" placeholder="salaire" name="salaire">
+
+
+
+            </div>
+
 
             <button class="btn btn-lg btn-primary" type="submit" name="send">Envoyer</button>
 
@@ -177,7 +214,3 @@ if (isset($_POST['send'])) {
 </body>
 
 </html>
-
-
-
-

@@ -19,7 +19,12 @@ function valideDate($date, $format = 'Y-m-d')
 function convertirstrtotime( $date){
 
     $date = strtotime($date);
-    $date = date("Y-m-d",$date);
-return $date;
+    if($date){
+        $date = date("Y-m-d",$date);return $date;
+    }else{
+        return false;
+    }
+    
+
 }
 
