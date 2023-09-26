@@ -3,6 +3,14 @@ include "header.php";
 require "DB.php";
 
 
+if (!empty($_GET['id_employes'])) {
+    $query = $pdo->prepare("DELETE FROM employes where id_employes = :id");
+    $query->execute([
+        "id" => $_GET['id_employes']
+    ]);
+    header("location:/validation/afficheemployes.php");
+}
+
 $employes = $statment->fetchAll();
 
 
@@ -35,6 +43,8 @@ $employes = $statment->fetchAll();
                     <td><?= $employe['service'] ?></td>
                     <td><?= $employe['date_embauche'] ?></td>
                     <td><?= $employe['salaire'] ?></td>
+                    <td><a style="color: white;text-decoration: none;" href="./crudentreprise/modification.php?id_employes=<?= $employe['id_employes'] ?>">modifier</a></td>
+                    <td><a style="color: white;text-decoration: none;" href="afficheemployes.php?id_employes=<?= $employe['id_employes'] ?>">supprimer</a></td>
 
                 </tr>
             <?php    } ?>

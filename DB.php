@@ -9,10 +9,6 @@ try{
 
     $statment = $pdo->query("SELECT * from employes");
 
-
-
-
-    
     
 }catch( PDOException $e){
 $error = $e->getMessage();

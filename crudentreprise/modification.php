@@ -3,6 +3,16 @@ include "../fonction.php";
 include "../header.php";
 require "../DB.php";
 
+if (!empty($_GET)) {
+    $requete2 = $pdo->prepare("SELECT * from employes where id_employes = :id");
+    $requete2->execute([
+        "id" => $_GET['id_employes']
+
+    ]);
+
+    $employe = $requete2->fetch();
+}
+
 if (isset($_POST['send'])) {
 
     // validation 
@@ -62,23 +72,21 @@ if (isset($_POST['send'])) {
         $error .= "<li>le salaire doit etre un chiffre</li>";
     }
 
-    // $tableauError
-
-    if (empty($error)) {
-
-        $requete = $pdo->prepare("INSERT INTO employes(nom,prenom,email,password,salaire,genre,date_embauche,service) values (:nom,:prenom,:email,:pass,:salaire,:genre,:dateem,:service)");
-        $requete->execute([
-            "nom" =>  $nom,
-            "prenom" => $prenom,
-            "email" => $email,
-            "pass" => $password,
-            "salaire" => $salaire,
-            "genre" => $genre,
-            "dateem" => $_POST['jobdate'],
-            "service" => $_POST['selection']
-        ]);
-        header("location:/validation/afficheemployes.php");
-    }
+    // if (empty($error)) {
+    $query = $pdo->prepare("UPDATE employes set nom  = :nom, prenom = :prenom,email = :email, password = :password,salaire = :salaire, service = :service, date_embauche = :dateem, genre = :genre where id_employes =:id");
+    $query->execute([
+        "nom" =>  $_POST['nom'],
+        "prenom" => $_POST['prenom'],
+        "email" => $_POST['email'],
+        "password" => $_POST['password'],
+        "salaire" => $_POST['salaire'],
+        "service" => $_POST['selection'],
+        "dateem" => $_POST['jobdate'],
+        "genre" => $_POST['genre'],
+        "id" => $_GET['id_employes']
+    ]);
+    header("Location: /validation/afficheemployes.php");
+    // }
 }
 
 
@@ -94,22 +102,22 @@ if (isset($_POST['send'])) {
 
         <div class="form-group">
             <label for="exampleInputEmail1" class="form-label mt-4">nom :</label>
-            <input type="text" class="form-control" placeholder="nom" name="nom" value="<?php echo @$_POST['nom'] ?>">
+            <input type="text" class="form-control" placeholder="nom" name="nom" value="<?php echo $employe['nom'] ?>">
 
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1" class="form-label mt-4">prenom :</label>
-            <input type="text" class="form-control" placeholder="prenom" name="prenom" value="<?= @$prenom ?>">
+            <input type="text" class="form-control" placeholder="prenom" name="prenom" value="<?php echo $employe['prenom'] ?>">
 
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1" class="form-label mt-4">Email :</label>
-            <input type="text" class="form-control" placeholder="email" name="email" value="<?= @$email ?>">
+            <input type="text" class="form-control" placeholder="email" name="email" value="<?php echo $employe['email'] ?>">
 
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1" class="form-label mt-4">mot de passe: </label>
-            <input type="password" name="password" class="form-control" placeholder="assword">
+            <input type="password" name="password" class="form-control" placeholder="assword" value="<?php echo $employe['password'] ?>">
         </div>
 
 
@@ -132,7 +140,7 @@ if (isset($_POST['send'])) {
 
         <div class="form-group">
             <label for="exampleInputPassword1" class="form-label mt-4">date de d'embauche : </label>
-            <input type="date" class="form-control" placeholder="date d'embauche" autocomplete="off" name="jobdate">
+            <input type="date" class="form-control" placeholder="date d'embauche" autocomplete="off" name="jobdate" value="<?php echo $employe['date_embauche'] ?>">
         </div>
 
         <!--
@@ -155,7 +163,7 @@ if (isset($_POST['send'])) {
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1" class="form-label mt-4">salaire :</label>
-            <input type="number" class="form-control" placeholder="salaire" name="salaire" value="<?= @$_POST['salaire'] ?>">
+            <input type="number" class="form-control" placeholder="salaire" name="salaire" value="<?php echo $employe['salaire'] ?>">
 
 
 
